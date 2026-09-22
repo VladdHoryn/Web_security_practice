@@ -22,13 +22,13 @@ services:
   library-system:
     container_name: library-system
     build:
-      context: /
+      context: .
       dockerfile: Dockerfile
     restart: always
     environment:
       DB_HOST: library-db
       DB_PORT: 5432
-      DB_NAME: library-system-db
+      DB_NAME: library-db
       DB_USERNAME: postgres
       DB_PASSWORD: postgres123
     depends_on:

@@ -7,7 +7,7 @@ spring:
       library-system
 
   datasource:
-    url: jdbc:postgresql://library-db:5432/library-system-db
+    url: jdbc:postgresql://library-db:5432/library-db
     username: postgres
     password: postgres123
 
