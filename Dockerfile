@@ -1,9 +1,18 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
+WORKDIR /build
 
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
-COPY target/Code-1.0-SNAPSHOT.jar app.jar
+COPY --from=builder /build/target/Code-1.0-SNAPSHOT.jar app.jar
 
 EXPOSE 8081
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
