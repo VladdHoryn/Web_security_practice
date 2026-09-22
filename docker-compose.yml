@@ -1,0 +1,47 @@
+services:
+  library-system-db:
+    image: postgres:15-alpine
+    container_name: library-db
+    restart: always
+    environment:
+      POSTGRES_DB: library-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - library_system_db_data:/var/lib/postgresql/data
+    networks:
+      - profi-garden-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d library-db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  library-system:
+    container_name: library-system
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      DB_HOST: library-db
+      DB_PORT: 5432
+      DB_NAME: library-system-db
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres123
+    depends_on:
+      library-system-db:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    networks:
+      - library-system-network
+
+volumes:
+  library_system_db_data:
+
+networks:
+  library-system-network:
+    driver: bridge

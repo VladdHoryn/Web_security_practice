@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name:
+      library-system
+
+  datasource:
+    url: jdbc:postgresql://library-db:5432/library-system-db
+    username: postgres
+    password: postgres123
+
+  flyway:
+    enabled: true
+    baseline-on-migration: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
