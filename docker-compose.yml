@@ -12,7 +12,7 @@ services:
     volumes:
       - library_system_db_data:/var/lib/postgresql/data
     networks:
-      - profi-garden-network
+      - library-system-network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d library-db" ]
       interval: 10s
@@ -22,7 +22,7 @@ services:
   library-system:
     container_name: library-system
     build:
-      context: ./
+      context: /
       dockerfile: Dockerfile
     restart: always
     environment:
@@ -48,7 +48,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
     networks:
-      - profi-garden-network
+      - library-system-network
     restart: unless-stopped
 
 volumes:
