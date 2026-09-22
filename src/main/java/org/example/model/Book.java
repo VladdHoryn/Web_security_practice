@@ -27,7 +27,8 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private boolean isReserved;
+    @Column(name = "is_reserved", nullable = false)
+    private boolean isReserved = false;
 
     @Override
     public String toString() {
