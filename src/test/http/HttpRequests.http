@@ -1,0 +1,103 @@
+@baseUrl = http://localhost:8081
+@user = admin
+@password = Adminamdin123!
+
+### ==========================================
+### BOOK CONTROLLER
+### ==========================================
+
+### Отримати всі книги
+GET {{baseUrl}}/api/books
+Authorization: Basic {{user}} {{password}}
+
+### Отримати лише доступні (незаброньовані) книги
+GET {{baseUrl}}/api/books/available
+Authorization: Basic {{user}} {{password}}
+
+### Знайти книгу за ID
+GET {{baseUrl}}/api/books/1
+Authorization: Basic {{user}} {{password}}
+
+### Додати нову книгу
+POST {{baseUrl}}/api/books
+Authorization: Basic {{user}} {{password}}
+Content-Type: application/json
+
+{
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "isbn": "978-0132350884",
+  "publishedYear": 2008
+}
+
+### Змінити статус бронювання книги
+PATCH {{baseUrl}}/api/books/1/status?reserved=true
+Authorization: Basic {{user}} {{password}}
+
+### Видалити книгу за ID
+DELETE {{baseUrl}}/api/books/1
+Authorization: Basic {{user}} {{password}}
+
+### ==========================================
+### RESERVATION CONTROLLER
+### ==========================================
+
+### Отримати всі бронювання
+GET {{baseUrl}}/api/reservations
+Authorization: Basic {{user}} {{password}}
+
+### Знайти бронювання за ID
+GET {{baseUrl}}/api/reservations/1
+Authorization: Basic {{user}} {{password}}
+
+### Отримати список бронювань конкретного користувача
+GET {{baseUrl}}/api/reservations/user/1
+Authorization: Basic {{user}} {{password}}
+
+### Створити нове бронювання
+POST {{baseUrl}}/api/reservations?bookId=1&userId=1
+Authorization: Basic {{user}} {{password}}
+
+### Скасувати бронювання (повернути книгу)
+DELETE {{baseUrl}}/api/reservations/1
+Authorization: Basic {{user}} {{password}}
+
+### ==========================================
+### USER CONTROLLER
+### ==========================================
+
+### Отримати всіх користувачів
+GET {{baseUrl}}/api/users
+Authorization: Basic {{user}} {{password}}
+
+### Знайти користувача за ID
+GET {{baseUrl}}/api/users/1
+Authorization: Basic {{user}} {{password}}
+
+### Знайти користувача за email
+GET {{baseUrl}}/api/users/search?email=test@example.com
+Authorization: Basic {{user}} {{password}}
+
+### Додати нового користувача
+POST {{baseUrl}}/api/users
+Authorization: Basic {{user}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "test@example.com"
+}
+
+### Оновити дані користувача (ім'я та/або email)
+PUT {{baseUrl}}/api/users/1
+Authorization: Basic {{user}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "John Doe Updated",
+  "email": "updated.test@example.com"
+}
+
+### Видалити користувача за ID
+DELETE {{baseUrl}}/api/users/1
+Authorization: Basic {{user}} {{password}}
