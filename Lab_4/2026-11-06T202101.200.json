@@ -1,0 +1,134 @@
+[
+  {
+    "id": 2,
+    "title": "Майстер і Маргарита",
+    "author": "Михайло Булгаков",
+    "reserved": false
+  },
+  {
+    "id": 3,
+    "title": "Кобзар",
+    "author": "Тарас Шевченко",
+    "reserved": false
+  },
+  {
+    "id": 4,
+    "title": "Тіні забутих предків",
+    "author": "Михайло Коцюбинський",
+    "reserved": true
+  },
+  {
+    "id": 5,
+    "title": "Володар перснів: Хранителі Персня",
+    "author": "Дж. Р. Р. Толкін",
+    "reserved": false
+  },
+  {
+    "id": 6,
+    "title": "Гаррі Поттер і філософський камінь",
+    "author": "Дж. К. Роулінг",
+    "reserved": true
+  },
+  {
+    "id": 7,
+    "title": "Гордість і упередження",
+    "author": "Джейн Остін",
+    "reserved": false
+  },
+  {
+    "id": 8,
+    "title": "Маленький принц",
+    "author": "Антуан де Сент-Екзюпері",
+    "reserved": false
+  },
+  {
+    "id": 9,
+    "title": "Тигролови",
+    "author": "Іван Багряний",
+    "reserved": true
+  },
+  {
+    "id": 10,
+    "title": "Місто",
+    "author": "Валєр'ян Підмогильний",
+    "reserved": false
+  },
+  {
+    "id": 11,
+    "title": "Алхімік",
+    "author": "Пауло Коельйо",
+    "reserved": false
+  },
+  {
+    "id": 12,
+    "title": "Убити пересмішника",
+    "author": "Гарпер Лі",
+    "reserved": false
+  },
+  {
+    "id": 13,
+    "title": "Марсіанські хроніки",
+    "author": "Рей Бредбері",
+    "reserved": true
+  },
+  {
+    "id": 14,
+    "title": "Сто років самотності",
+    "author": "Габрієль Гарсія Маркес",
+    "reserved": false
+  },
+  {
+    "id": 15,
+    "title": "Три товариші",
+    "author": "Еріх Марія Ремарк",
+    "reserved": false
+  },
+  {
+    "id": 16,
+    "title": "Аліса в Країні Див",
+    "author": "Льюїс Керрол",
+    "reserved": true
+  },
+  {
+    "id": 17,
+    "title": "Хіба ревуть воли, як ясла повні?",
+    "author": "Панас Мирний",
+    "reserved": false
+  },
+  {
+    "id": 18,
+    "title": "Фауст",
+    "author": "Йоганн Вольфганг фон Гете",
+    "reserved": false
+  },
+  {
+    "id": 19,
+    "title": "Граф Монте-Крісто",
+    "author": "Александр Дюма",
+    "reserved": false
+  },
+  {
+    "id": 20,
+    "title": "Відьмак. Останнє бажання",
+    "author": "Анджей Сапковський",
+    "reserved": false
+  },
+  {
+    "id": 21,
+    "title": "Test",
+    "author": "A",
+    "reserved": false
+  },
+  {
+    "id": 22,
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "reserved": false
+  },
+  {
+    "id": 23,
+    "title": "Clean Code",
+    "author": "Robert C. Martin",
+    "reserved": false
+  }
+]
