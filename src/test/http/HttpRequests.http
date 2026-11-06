@@ -1,26 +1,36 @@
 @baseUrl = http://localhost:8081
-@user = admin
-@password = Adminamdin123!
+
+# USER      — перегляд книг, створення бронювання
+@userLogin = user
+@userPassword = User123!
+
+# LIBRARIAN — те саме, що USER + додавання книг, зміна статусу, керування бронюваннями
+@librarianLogin = librarian
+@librarianPassword = Librarian123!
+
+# ADMIN     — повний доступ (у т.ч. видалення книг і керування користувачами)
+@adminLogin = admin
+@adminPassword = Adminamdin123!
 
 ### ==========================================
 ### BOOK CONTROLLER
 ### ==========================================
 
-### Отримати всі книги
+### Отримати всі книги (USER, LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/books
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{userLogin}} {{userPassword}}
 
-### Отримати лише доступні (незаброньовані) книги
+### Отримати лише доступні (незаброньовані) книги (USER, LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/books/available
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{userLogin}} {{userPassword}}
 
-### Знайти книгу за ID
+### Знайти книгу за ID (USER, LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/books/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{userLogin}} {{userPassword}}
 
-### Додати нову книгу
+### Додати нову книгу (LIBRARIAN, ADMIN)
 POST {{baseUrl}}/api/books
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 Content-Type: application/json
 
 {
@@ -30,57 +40,57 @@ Content-Type: application/json
   "publishedYear": 2008
 }
 
-### Змінити статус бронювання книги
+### Змінити статус бронювання книги (LIBRARIAN, ADMIN)
 PATCH {{baseUrl}}/api/books/1/status?reserved=true
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 
-### Видалити книгу за ID
+### Видалити книгу за ID (ADMIN)
 DELETE {{baseUrl}}/api/books/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 
 ### ==========================================
 ### RESERVATION CONTROLLER
 ### ==========================================
 
-### Отримати всі бронювання
+### Отримати всі бронювання (LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/reservations
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 
-### Знайти бронювання за ID
+### Знайти бронювання за ID (LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/reservations/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 
-### Отримати список бронювань конкретного користувача
+### Отримати список бронювань конкретного користувача (LIBRARIAN, ADMIN)
 GET {{baseUrl}}/api/reservations/user/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 
-### Створити нове бронювання
+### Створити нове бронювання (USER, LIBRARIAN, ADMIN)
 POST {{baseUrl}}/api/reservations?bookId=1&userId=1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{userLogin}} {{userPassword}}
 
-### Скасувати бронювання (повернути книгу)
+### Скасувати бронювання (повернути книгу) (LIBRARIAN, ADMIN)
 DELETE {{baseUrl}}/api/reservations/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
 
 ### ==========================================
-### USER CONTROLLER
+### USER CONTROLLER (лише ADMIN)
 ### ==========================================
 
 ### Отримати всіх користувачів
 GET {{baseUrl}}/api/users
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 
 ### Знайти користувача за ID
 GET {{baseUrl}}/api/users/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 
 ### Знайти користувача за email
 GET {{baseUrl}}/api/users/search?email=test@example.com
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 
 ### Додати нового користувача
 POST {{baseUrl}}/api/users
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 Content-Type: application/json
 
 {
@@ -90,7 +100,7 @@ Content-Type: application/json
 
 ### Оновити дані користувача (ім'я та/або email)
 PUT {{baseUrl}}/api/users/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
 Content-Type: application/json
 
 {
@@ -100,4 +110,28 @@ Content-Type: application/json
 
 ### Видалити користувача за ID
 DELETE {{baseUrl}}/api/users/1
-Authorization: Basic {{user}} {{password}}
+Authorization: Basic {{adminLogin}} {{adminPassword}}
+
+### ==========================================
+### ПЕРЕВІРКА ОБМЕЖЕНЬ (очікується 403 Forbidden)
+### ==========================================
+
+### USER намагається додати книгу → 403
+POST {{baseUrl}}/api/books
+Authorization: Basic {{userLogin}} {{userPassword}}
+Content-Type: application/json
+
+{
+  "title": "Forbidden Book",
+  "author": "Nobody",
+  "isbn": "978-0000000000",
+  "publishedYear": 2020
+}
+
+### LIBRARIAN намагається видалити книгу → 403
+DELETE {{baseUrl}}/api/books/1
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
+
+### LIBRARIAN намагається переглянути користувачів → 403
+GET {{baseUrl}}/api/users
+Authorization: Basic {{librarianLogin}} {{librarianPassword}}
