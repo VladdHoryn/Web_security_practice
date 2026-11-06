@@ -4,6 +4,7 @@ import org.example.application.ReservationApplicationService;
 import org.example.model.Reservation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class ReservationController {
      * Отримати всі бронювання
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
     public ResponseEntity<List<Reservation>> getAllReservations() {
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
@@ -39,6 +41,7 @@ public class ReservationController {
      * Знайти бронювання за ID
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
     public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
         return ResponseEntity.ok(reservationService.getReservationById(id));
     }
@@ -48,6 +51,7 @@ public class ReservationController {
      * Отримати список бронювань конкретного користувача
      */
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
     public ResponseEntity<List<Reservation>> getReservationsByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(reservationService.getReservationsByUser(userId));
     }
@@ -57,6 +61,7 @@ public class ReservationController {
      * Створити нове бронювання
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('USER', 'LIBRARIAN', 'ADMIN')")
     public ResponseEntity<Reservation> createReservation(
             @RequestParam(name = "bookId") Long bookId,
             @RequestParam(name = "userId") Long userId) {
@@ -69,6 +74,7 @@ public class ReservationController {
      * Скасувати бронювання (повернути книгу)
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('LIBRARIAN', 'ADMIN')")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();
