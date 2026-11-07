@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.application.BookApplicationService;
 import org.example.config.SecurityConfig;
 import org.example.model.Book;
+import org.example.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, JwtService.class})
 class BookControllerTest {
 
     private static final String NEW_BOOK_JSON = """
@@ -79,9 +80,9 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/books: неправильний пароль → 401")
-    void getAllBooks_wrongPassword_unauthorized() throws Exception {
-        mockMvc.perform(get("/api/books").with(WRONG_PASSWORD))
+    @DisplayName("GET /api/books: недійсний JWT → 401")
+    void getAllBooks_invalidToken_unauthorized() throws Exception {
+        mockMvc.perform(get("/api/books").with(INVALID_TOKEN))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(bookService);

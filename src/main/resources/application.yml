@@ -19,3 +19,8 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+jwt:
+  # HS256 потребує ключ щонайменше 32 байти. У проді — задавати через змінну оточення JWT_SECRET.
+  secret: ${JWT_SECRET:library-system-lab7-very-secret-jwt-signing-key-2026}
+  expiration-minutes: 60

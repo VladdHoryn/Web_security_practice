@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.application.UserApplicationService;
 import org.example.config.SecurityConfig;
 import org.example.model.User;
+import org.example.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, JwtService.class})
 class UserControllerTest {
 
     private static final String NEW_USER_JSON = """

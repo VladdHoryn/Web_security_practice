@@ -5,6 +5,7 @@ import org.example.config.SecurityConfig;
 import org.example.model.Book;
 import org.example.model.Reservation;
 import org.example.model.User;
+import org.example.security.JwtService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReservationController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, JwtService.class})
 class ReservationControllerTest {
 
     @Autowired
