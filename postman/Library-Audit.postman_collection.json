@@ -1,0 +1,142 @@
+{
+  "info": {
+    "name": "Library System — Audit (Lab 10)",
+    "description": "Lab 10: 5 запитів з JWT для отримання audit notes (createdBy / createdDate / lastModifiedBy / lastModifiedDate).\nЗапускати цілою колекцією (Run collection) — спочатку логіни збережуть токени, далі йдуть 5 audit-запитів.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081" },
+    { "key": "userToken", "value": "" },
+    { "key": "librarianToken", "value": "" },
+    { "key": "adminToken", "value": "" },
+    { "key": "auditBookId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "0. Login (отримати JWT)",
+      "item": [
+        {
+          "name": "Login USER",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.collectionVariables.set('userToken', pm.response.json().token);"
+          ] } }],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user\",\n  \"password\": \"User123!\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login LIBRARIAN",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.collectionVariables.set('librarianToken', pm.response.json().token);"
+          ] } }],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"librarian\",\n  \"password\": \"Librarian123!\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        },
+        {
+          "name": "Login ADMIN",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.collectionVariables.set('adminToken', pm.response.json().token);"
+          ] } }],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Adminamdin123!\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Audit notes (5 запитів для скріншотів)",
+      "item": [
+        {
+          "name": "1 LIBRARIAN: POST /api/books → 201, createdBy = librarian",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('201 Created', () => pm.response.to.have.status(201));",
+            "pm.test('createdBy = librarian', () => pm.expect(pm.response.json().createdBy).to.eql('librarian'));",
+            "pm.collectionVariables.set('auditBookId', pm.response.json().id);"
+          ] } }],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{librarianToken}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Refactoring\",\n  \"author\": \"Martin Fowler\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/books", "host": ["{{baseUrl}}"], "path": ["api", "books"] }
+          }
+        },
+        {
+          "name": "2 ADMIN: PATCH /api/books/{id}/status → 200, lastModifiedBy = admin",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('createdBy = librarian', () => pm.expect(pm.response.json().createdBy).to.eql('librarian'));",
+            "pm.test('lastModifiedBy = admin', () => pm.expect(pm.response.json().lastModifiedBy).to.eql('admin'));"
+          ] } }],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/books/{{auditBookId}}/status?reserved=true",
+              "host": ["{{baseUrl}}"], "path": ["api", "books", "{{auditBookId}}", "status"],
+              "query": [{ "key": "reserved", "value": "true" }]
+            }
+          }
+        },
+        {
+          "name": "3 USER: GET /api/books/{id} → 200 + audit notes",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('є аудит-нотатки', () => {",
+            "  const b = pm.response.json();",
+            "  pm.expect(b.createdBy).to.eql('librarian');",
+            "  pm.expect(b.lastModifiedBy).to.eql('admin');",
+            "  pm.expect(b.createdDate).to.be.a('string');",
+            "  pm.expect(b.lastModifiedDate).to.be.a('string');",
+            "});"
+          ] } }],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{userToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books/{{auditBookId}}", "host": ["{{baseUrl}}"], "path": ["api", "books", "{{auditBookId}}"] }
+          }
+        },
+        {
+          "name": "4 LIBRARIAN: GET /api/books → 200, у кожної книги є audit notes",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('усі книги мають createdBy', () => pm.response.json().forEach(b => pm.expect(b.createdBy).to.be.a('string')));"
+          ] } }],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{librarianToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books", "host": ["{{baseUrl}}"], "path": ["api", "books"] }
+          }
+        },
+        {
+          "name": "5 ADMIN: GET /api/books/1 → 200, seed-книга createdBy = system",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('createdBy = system', () => pm.expect(pm.response.json().createdBy).to.eql('system'));"
+          ] } }],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{adminToken}}", "type": "string" }] },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/books/1", "host": ["{{baseUrl}}"], "path": ["api", "books", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
